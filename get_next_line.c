@@ -6,28 +6,15 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:26:53 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/23 02:04:45 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/23 06:33:19 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int					put_newline(char **line, char *str)
+int					check_newline(char *str)
 {
 	int				idx;
-
-	idx = 0;
-	while (str[idx] != '\n' || str[idx] == '\0')
-	{
-		*line[idx] = str[idx];
-		idx++;
-	}
-	return (idx);
-}
-
-int		check_newline(char *str)
-{
-	int	idx;
 
 	idx = 0;
 	if (!str)
@@ -40,10 +27,28 @@ int		check_newline(char *str)
 	}
 	return (NONEWLINE);
 }
-
-int				put_static_line(char *stc, char *temp, int new_next)
+/*
+int					put_newline(char **line, char *str, int len)
 {
-	int	idx;
+	int				idx;
+
+	idx = 0;
+	if (!line || !str)
+		return (-1);
+	while (str[idx] != '\n' || str[idx] == '\0')
+	{
+		*line = str;
+		idx++;
+	}
+	if (str[idx] == '\0')
+		return (0);
+	else
+		return (idx);
+}
+
+int					put_static_line(char *stc, char *temp, int new_next)
+{
+	int				idx;
 
 	idx = 0;
 	if (!stc || !temp)
@@ -54,53 +59,56 @@ int				put_static_line(char *stc, char *temp, int new_next)
 		new_next++;
 	}
 	if (temp[new_next] == '\0')
-		return (0);
+		return (-3);
 	else
-		return (1);
+		return (new_next);
 }
-
- int					get_next_line(int fd, char **line)
+*/
+#include <stdio.h>
+int					get_next_line(int fd, char **line)
 {
 	int				check_read;
-	char			*buff;
+	char			buff[BUFFER_SIZE + 1];
 	int				chk_nl;
 	static char		*stc_line[4096];
 	char			*temp;
 
-	buff = (char *)malloc(sizeof(char) * READMAX + 1);
-	if (fd < 0 || !line || !buff)
+	if (fd < 0 || !line)
 		return (-1);
-	check_read = read(fd, buff, READMAX);
+	check_read = read(fd, buff, BUFFER_SIZE);
+	printf("%d", fd);
 	while (check_read > 0)
 	{
 		buff[check_read] = '\0';
-		temp = str_join(stc_line[fd], buff);
+		if (*temp)
+			free(temp);
+		temp = str_join(stc_line[fd], buff);		
 		chk_nl = check_newline(temp);
 		if (chk_nl != NONEWLINE && chk_nl != -1)
 		{
-			chk_nl = put_newline(line, temp);		
-			chk_nl = put_static_line(stc_line[fd], temp, chk_nl + 1);
-			free(buff);
-			buff = 0;
-			return (chk_nl);
-		}		
-		str_cpy(stc_line[fd], temp);		
-		check_read = read(fd, buff, READMAX);		
+			*line = sub_str(temp, 0, chk_nl);
+			stc_line[fd] = sub_str(temp, chk_nl + 1, 
+					str_len(temp) - chk_nl - 1);
+			return (1);
+		}
+		stc_line[fd] = temp;
+		check_read = read(fd, buff, BUFFER_SIZE);		
 	}
 	if (check_read == -1)
 	{
-		free(buff);
-		return (-1);
+		free(stc_line[fd]);
+		return (-1);	
 	}
-	if (check_read == 0 || *stc_line)
+	if (check_read == 0)
 	{
-		chk_nl = put_newline(line, temp);
-		chk_nl = put_static_line(stc_line[fd], temp, chk_nl + 1);
-		free(buff);
-		buff = 0;
-		if (chk_nl == 0)
-			return (0);		
-	}	
-	return (1);
-	
+		if (*stc_line[fd])
+		{
+			chk_nl = check_newline(stc_line[fd]);
+			*line = sub_str(stc_line[fd], 0, chk_nl);		
+			if (!(*line))
+				return (-1);
+		}
+		return (0);
+	}
+	return (-1);	
 }

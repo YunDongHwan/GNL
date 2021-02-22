@@ -6,7 +6,7 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:28:13 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/22 22:53:26 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/23 06:01:39 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,3 +66,26 @@ char	*str_join(char *s1, char *s2)
 	str_j[idx] = '\0';
 	return ((char *)str_j);
 }
+
+char				*sub_str(char *s, int start, size_t len)
+{
+	char	*dest;
+	char	*src;
+	unsigned int	idx;
+
+	src = s;
+	if (!(dest = (char *)malloc(sizeof(char) * (len + 1))))
+		return (0);
+	if (!dest || !s)
+		return (0);
+	idx = 0;
+	while (idx < len && src[start] && !(start > str_len(src)))
+	{
+		dest[idx] = src[start];
+		idx++;
+		start++;
+	}
+	dest[idx] = '\0';
+	return (dest);
+}
+

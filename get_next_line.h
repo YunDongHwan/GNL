@@ -6,7 +6,7 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:28:28 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/23 01:38:34 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/23 06:25:01 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,16 @@
 # include <limits.h>
 # include <stdlib.h>
 
-# define READMAX 32
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 32
+# endif
+
 # define NONEWLINE -2
 
 int		get_next_line(int fd, char **line);
 int		str_len(char *s);
 void	str_cpy(char *dst, const char *src);
 char	*str_join(char *s1, char *s2);
+char	*sub_str(char *s, int start, size_t len);
 
 # endif
