@@ -6,57 +6,63 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:28:13 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/19 05:56:42 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/22 22:53:26 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		strlen(char *str)
+int		str_len(char *s)
 {
 	int len;
 	
 	len = 0;
-	while(str[len])
-		len++;		
+	if (!s)
+		return (0);
+	while(s[len])
+		len++;
 	return (len);
 }
 
-int		check_newline(char *str)
+void		str_cpy(char *dst, const char *src)
 {
-	int	idx;
+	size_t	idx;
 
 	idx = 0;
-	while (str[idx])
+	if (!dst && !src)
+		return ;
+	while (src[idx])
 	{
-		if (str[idx] == '\n')
-			return (idx);
+		dst[idx] = src[idx];
 		idx++;
 	}
-	return (NONEWLINE);
+	dst[idx] = '\0';	
 }
 
-
-char				*substr(char *s, unsigned int start, size_t len)
+char	*str_join(char *s1, char *s2)
 {
-	unsigned char	*dest;
-	unsigned char	*src;
-	unsigned int	idx;
+	unsigned char	*str_j;
+	int				len;
+	int				idx;
+	int				len_s1;
+	int				len_s2;
 
-	src = (unsigned char *)s;
-	if (!(dest = (unsigned char *)malloc(sizeof(char) * (len + 1))))
-		return (0);
-	if (!dest || !s)
-		return (0);
+	if (!s1)
+		return (NULL);
+	len_s1 = str_len(s1);
+	len_s2 = str_len(s2);
+	len = len_s1 + len_s2;
+	str_j = (unsigned char *)malloc(sizeof(char) * (len + 1));
+	if (!str_j)
+		return (NULL);
 	idx = 0;
-	while (idx < len && src[start] && !(start > strlen((char *)src)))
+	while (idx < len)
 	{
-		dest[idx] = src[start];
-		idx++;
-		start++;
+		if (idx < len_s1)
+			str_j[idx++] = *s1++;
+		else
+			str_j[idx++] = *s2++;
 	}
-	dest[idx] = '\0';
-	return ((char *)dest);
+	str_j[idx] = '\0';
+	return ((char *)str_j);
 }
-
-
