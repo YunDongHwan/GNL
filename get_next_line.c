@@ -6,7 +6,7 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:26:53 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/23 06:33:19 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/24 23:46:40 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,43 +27,7 @@ int					check_newline(char *str)
 	}
 	return (NONEWLINE);
 }
-/*
-int					put_newline(char **line, char *str, int len)
-{
-	int				idx;
 
-	idx = 0;
-	if (!line || !str)
-		return (-1);
-	while (str[idx] != '\n' || str[idx] == '\0')
-	{
-		*line = str;
-		idx++;
-	}
-	if (str[idx] == '\0')
-		return (0);
-	else
-		return (idx);
-}
-
-int					put_static_line(char *stc, char *temp, int new_next)
-{
-	int				idx;
-
-	idx = 0;
-	if (!stc || !temp)
-		return (-1);
-	while (temp[new_next] != '\n' || temp[new_next] != '\0')
-	{
-		*stc++ = temp[new_next];
-		new_next++;
-	}
-	if (temp[new_next] == '\0')
-		return (-3);
-	else
-		return (new_next);
-}
-*/
 #include <stdio.h>
 int					get_next_line(int fd, char **line)
 {
@@ -73,42 +37,84 @@ int					get_next_line(int fd, char **line)
 	static char		*stc_line[4096];
 	char			*temp;
 
+//		printf("-----start gnl-----\n");
+//	printf("start stc : %s\n", stc_line[fd]);/////////////
 	if (fd < 0 || !line)
+	{
+		printf("-----end gnl 1-----\n");
 		return (-1);
+	}
 	check_read = read(fd, buff, BUFFER_SIZE);
-	printf("%d", fd);
+//printf("BUFFER_SIZE : %d\n", BUFFER_SIZE);
+	printf("gnl read : %d\n", check_read);//////////////
 	while (check_read > 0)
 	{
+		printf("-----------start while-------------------------\n");
+	   	
 		buff[check_read] = '\0';
-		if (*temp)
-			free(temp);
-		temp = str_join(stc_line[fd], buff);		
+		temp = str_join(stc_line[fd], buff);
+//	printf("join in temp : %s\n", temp);/////////////
 		chk_nl = check_newline(temp);
+//	printf("newline index : %d\n", chk_nl);/////////////
 		if (chk_nl != NONEWLINE && chk_nl != -1)
 		{
-			*line = sub_str(temp, 0, chk_nl);
+			line = sub_str(temp, 0, chk_nl);
+//			printf("put line : %s\n", *line);
 			stc_line[fd] = sub_str(temp, chk_nl + 1, 
 					str_len(temp) - chk_nl - 1);
+//		printf("nl next stc : %s\n", stc_line[fd]);/////////////
+			printf("-----end gnl 2-----\n");
+			free(temp);
+			temp = 0;
 			return (1);
 		}
 		stc_line[fd] = temp;
+		free(temp);
+		temp = 0;
+//		printf("stc : %s\n", stc_line[fd]);/////////////
+//		printf("temp : %s\n", temp);//////////////
 		check_read = read(fd, buff, BUFFER_SIZE);		
 	}
+	temp = stc_line[fd];
 	if (check_read == -1)
 	{
-		free(stc_line[fd]);
+		free(temp);
+		temp = 0;
+		printf("-----end gnl 3-----");
+		stc_line[fd] = 0;
 		return (-1);	
 	}
 	if (check_read == 0)
 	{
-		if (*stc_line[fd])
+//	printf("1\n");
+		if (*temp)
 		{
-			chk_nl = check_newline(stc_line[fd]);
-			*line = sub_str(stc_line[fd], 0, chk_nl);		
-			if (!(*line))
+//		printf("read 0 stc : %s\n", stc_line[fd]);/////////////
+			chk_nl = check_newline(temp);
+//	printf("stc chk_nl : %d\n", chk_nl);/////////////
+			line = sub_str(temp, 0, chk_nl);		
+			if (!line)
+			{
+		printf("-----end gnl 4-----");
 				return (-1);
+			}
+			if ((line + chk_nl) != '\0')
+			{
+				stc_line[fd] = sub_str(temp, chk_nl + 1, 
+					str_len(temp) - chk_nl - 1);
+				free(temp);
+				temp = 0;
+				return (1);
+			}
+			free(temp);
+			temp = 0;
+			return (0);
 		}
-		return (0);
+
+	printf("222\n"); return (0);
 	}
-	return (-1);	
+	temp = 0;
+	*line = str_dup(""); 
+		printf("-----end gnl 6-----\n");
+	return (0);
 }
