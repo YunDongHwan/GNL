@@ -6,7 +6,7 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:28:13 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/24 23:06:02 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/25 19:56:17 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,6 @@ int		str_len(char *s)
 	while(s[len])
 		len++;
 	return (len);
-}
-
-void		str_cpy(char *dst, const char *src)
-{
-	size_t	idx;
-
-	idx = 0;
-	if (!dst && !src)
-		return ;
-	while (src[idx])
-	{
-		dst[idx] = src[idx];
-		idx++;
-	}
-	dst[idx] = '\0';	
 }
 
 char	*str_join(char *s1, char *s2)
@@ -73,9 +58,9 @@ char				*sub_str(char *s, int start, size_t len)
 
 	src = s;
 	if (!(dest = (char *)malloc(sizeof(char) * (len + 1))))
-		return (0);
+		return (NULL);
 	if (!dest || !s)
-		return (0);
+		return (NULL);
 	idx = 0;
 	while (idx < len && src[start] && !(start > str_len(src)))
 	{
