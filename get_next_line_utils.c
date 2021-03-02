@@ -6,7 +6,7 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:28:13 by doyun             #+#    #+#             */
-/*   Updated: 2021/02/25 19:56:17 by doyun            ###   ########.fr       */
+/*   Updated: 2021/02/26 07:33:29 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ char				*str_dup(char *s1)
 	int				len;
 	int				idx;
 
+	if (!s1)
+		return (NULL);
 	len = str_len(s1) + 1;
 	temp_s1 = (char *)malloc(sizeof(char) * len);
 	if (temp_s1 == 0)
