@@ -6,7 +6,7 @@
 /*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 02:48:00 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/08 23:16:47 by doyun            ###   ########.fr       */
+/*   Updated: 2021/03/09 03:11:05 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,14 @@
 int					find_nl(char *str)
 {
 	int 			idx;
-	int				len;
 
 	idx = 0;
 	if (!str)
 		return (-1);
-	len = str_len(str);
-	while (idx < len)
+	while (str[idx])
 	{
 		if (str[idx] == '\n')
 			return (idx);
-		if (str[idx] == '\0')
-			return (-2);
 		idx++;
 	}
 	return (-1);
@@ -70,48 +66,32 @@ int					not_read(int rdlen, char **line, char **stc_line)
 	return (0);
 }
 
-int				can_read(int rdlen, char **line, char **stc_line, char *buff, int fd)
+int					get_next_line(int fd, char **line)
 {
-	int			nlidx;
-	char		*temp;
-
-	while (rdlen > 0)
-	{
-		buff[rdlen] = '\0';
-		temp = *stc_line;
-		*stc_line = str_join(temp, buff);
-		free(temp);
-		nlidx = find_nl(*stc_line);
-		if (nlidx >= 0)
-		{
-			put_line(&(*line), &(*stc_line), nlidx);
-			return (1);
-		}
-		else if (nlidx == -2)
-		{
-			nlidx = str_len(*stc_line);
-			*line = sub_str(*stc_line, 0, nlidx);
-			*stc_line = 0;
-			return (0);
-		}
-		rdlen = read(fd, buff, BUFFER_SIZE);
-	}
-	return (0);
-}
-
-int				get_next_line(int fd, char **line)
-{
-	static char *stc_line[OPEN_MAX];
-	char		buff[BUFFER_SIZE + 1];
-	int			rdlen;
-	int			rdchk;
+	static char 	*stc_line[OPEN_MAX];
+	char			buff[BUFFER_SIZE + 1];
+	char			*temp;
+	int				rdlen;
+	int				rdchk;
+	int				nlidx;
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
 	rdlen = read(fd, buff, BUFFER_SIZE);
-	rdchk = can_read(rdlen, &(*line), &(stc_line[fd]), buff, fd);
-	if (rdchk)
-		return (1);
+	while (rdlen > 0)
+	{
+		buff[rdlen] = '\0';
+		temp = stc_line[fd];
+		stc_line[fd] = str_join(temp, buff);
+		free(temp);
+		nlidx = find_nl(*stc_line);
+		if (nlidx >= 0)
+		{
+			put_line(&(*line), &(stc_line[fd]), nlidx);
+			return (1);
+		}
+		rdlen = read(fd, buff, BUFFER_SIZE);
+	}
 	rdchk = not_read(rdlen, &(*line), &(stc_line[fd]));
 	return (rdchk);
 }
