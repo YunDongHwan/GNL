@@ -6,12 +6,12 @@
 /*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 03:22:24 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/09 03:28:07 by doyun            ###   ########.fr       */
+/*   Updated: 2021/03/09 03:32:51 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE
-# define GET_NEXT_LINE
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <fcntl.h>
 # include <unistd.h>
@@ -23,7 +23,7 @@
 # endif
 
 # ifndef OPEN_MAX
-#  define BUFFER_SIZE 4096
+#  define OPEN_MAX 4096
 # endif
 
 int		get_next_line(int fd, char **line);
