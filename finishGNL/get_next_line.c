@@ -6,7 +6,7 @@
 /*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 02:48:00 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/08 23:09:05 by doyun            ###   ########.fr       */
+/*   Updated: 2021/03/08 23:16:47 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,19 @@
 int					find_nl(char *str)
 {
 	int 			idx;
+	int				len;
 
 	idx = 0;
 	if (!str)
 		return (-1);
-	while (str[idx])
+	len = str_len(str);
+	while (idx < len)
 	{
 		if (str[idx] == '\n')
 			return (idx);
-		idx++;
 		if (str[idx] == '\0')
 			return (-2);
+		idx++;
 	}
 	return (-1);
 }
@@ -87,7 +89,8 @@ int				can_read(int rdlen, char **line, char **stc_line, char *buff, int fd)
 		}
 		else if (nlidx == -2)
 		{
-			*line = str_dup(*stc_line);
+			nlidx = str_len(*stc_line);
+			*line = sub_str(*stc_line, 0, nlidx);
 			*stc_line = 0;
 			return (0);
 		}
