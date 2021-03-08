@@ -6,12 +6,11 @@
 /*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 02:48:00 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/03 07:32:41 by doyun            ###   ########.fr       */
+/*   Updated: 2021/03/08 23:09:05 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int					find_nl(char *str)
 {
@@ -25,6 +24,8 @@ int					find_nl(char *str)
 		if (str[idx] == '\n')
 			return (idx);
 		idx++;
+		if (str[idx] == '\0')
+			return (-2);
 	}
 	return (-1);
 }
@@ -36,15 +37,10 @@ void				put_line(char **line, char **stc_line, int nlidx)
 	temp = *stc_line;
 	*line = sub_str(temp, 0, nlidx);	
 	if (temp[nlidx + 1])
-	{
 		*stc_line = str_dup(&temp[nlidx + 1]);
-		free(temp);
-	}
-	else
-	{
-		free(temp);
+	else		
 		*stc_line = 0;
-	}
+	free(temp);
 }
 
 int					not_read(int rdlen, char **line, char **stc_line)
@@ -55,7 +51,7 @@ int					not_read(int rdlen, char **line, char **stc_line)
 	if (rdlen < 0)
 		return (-1);
 	nlidx = find_nl(*stc_line);
-	if (nlidx >= 0 && *stc_line)
+	if (nlidx >= 0)
 	{
 		put_line((&(*line)), &(*stc_line), nlidx);
 		return (1);
@@ -88,6 +84,12 @@ int				can_read(int rdlen, char **line, char **stc_line, char *buff, int fd)
 		{
 			put_line(&(*line), &(*stc_line), nlidx);
 			return (1);
+		}
+		else if (nlidx == -2)
+		{
+			*line = str_dup(*stc_line);
+			*stc_line = 0;
+			return (0);
 		}
 		rdlen = read(fd, buff, BUFFER_SIZE);
 	}

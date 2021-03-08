@@ -6,7 +6,7 @@
 /*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 03:28:28 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/03 02:46:54 by doyun            ###   ########.fr       */
+/*   Updated: 2021/03/04 20:37:39 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 4
+#  define BUFFER_SIZE 32
 # endif
 
 # ifndef OPEN_MAX
-#  define OPEN_MAX 32
+#  define OPEN_MAX 4096
 # endif
 
 
