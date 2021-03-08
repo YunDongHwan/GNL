@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
+/*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/16 03:28:13 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/04 22:56:12 by doyun            ###   ########.fr       */
+/*   Created: 2021/03/09 03:26:19 by doyun             #+#    #+#             */
+/*   Updated: 2021/03/09 03:30:04 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		str_len(char *s)
+int					str_len(char *s)
 {
-	int len;
-	
+	int				len;
+
 	len = 0;
 	if (!s)
 		return (0);
-	while(s[len])
+	while (s[len])
 		len++;
 	return (len);
 }
 
-char	*str_join(char *s1, char *s2)
+char				*str_join(char *s1, char *s2)
 {
 	char			*str_j;
 	int				len;
@@ -52,8 +52,8 @@ char	*str_join(char *s1, char *s2)
 
 char				*sub_str(char *s, int start, size_t len)
 {
-	char	*dest;
-	char	*src;
+	char			*dest;
+	char			*src;
 	unsigned int	idx;
 
 	src = s;
@@ -74,7 +74,7 @@ char				*sub_str(char *s, int start, size_t len)
 
 char				*str_dup(char *s1)
 {
-	char	*temp_s1;
+	char			*temp_s1;
 	int				len;
 	int				idx;
 

@@ -6,7 +6,7 @@
 /*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 02:48:00 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/09 03:11:05 by doyun            ###   ########.fr       */
+/*   Updated: 2021/03/09 03:22:02 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int					find_nl(char *str)
 {
-	int 			idx;
+	int				idx;
 
 	idx = 0;
 	if (!str)
@@ -30,13 +30,13 @@ int					find_nl(char *str)
 
 void				put_line(char **line, char **stc_line, int nlidx)
 {
-	char			*temp;	
+	char			*temp;
 
 	temp = *stc_line;
-	*line = sub_str(temp, 0, nlidx);	
+	*line = sub_str(temp, 0, nlidx);
 	if (temp[nlidx + 1])
 		*stc_line = str_dup(&temp[nlidx + 1]);
-	else		
+	else
 		*stc_line = 0;
 	free(temp);
 }
@@ -66,14 +66,26 @@ int					not_read(int rdlen, char **line, char **stc_line)
 	return (0);
 }
 
+int					read_and_nl(char **line, char **stc_line)
+{
+	int				nlidx;
+
+	nlidx = find_nl(*stc_line);
+	if (nlidx >= 0)
+	{
+		put_line(&(*line), &(*stc_line), nlidx);
+		return (1);
+	}
+	return (0);
+}
+
 int					get_next_line(int fd, char **line)
 {
-	static char 	*stc_line[OPEN_MAX];
+	static char		*stc_line[OPEN_MAX];
 	char			buff[BUFFER_SIZE + 1];
 	char			*temp;
 	int				rdlen;
 	int				rdchk;
-	int				nlidx;
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
@@ -84,12 +96,9 @@ int					get_next_line(int fd, char **line)
 		temp = stc_line[fd];
 		stc_line[fd] = str_join(temp, buff);
 		free(temp);
-		nlidx = find_nl(*stc_line);
-		if (nlidx >= 0)
-		{
-			put_line(&(*line), &(stc_line[fd]), nlidx);
+		rdchk = read_and_nl(&(*line), &stc_line[fd]);
+		if (rdchk)
 			return (1);
-		}
 		rdlen = read(fd, buff, BUFFER_SIZE);
 	}
 	rdchk = not_read(rdlen, &(*line), &(stc_line[fd]));

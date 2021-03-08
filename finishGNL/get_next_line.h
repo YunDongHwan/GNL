@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: doyun </var/mail/doyun>                    +#+  +:+       +#+        */
+/*   By: doyun <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/16 03:28:28 by doyun             #+#    #+#             */
-/*   Updated: 2021/03/04 20:37:39 by doyun            ###   ########.fr       */
+/*   Created: 2021/03/09 03:22:24 by doyun             #+#    #+#             */
+/*   Updated: 2021/03/09 03:28:07 by doyun            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@
 # endif
 
 # ifndef OPEN_MAX
-#  define OPEN_MAX 4096
+#  define BUFFER_SIZE 4096
 # endif
-
 
 int		get_next_line(int fd, char **line);
 int		str_len(char *s);
@@ -33,4 +32,4 @@ char	*str_join(char *s1, char *s2);
 char	*sub_str(char *s, int start, size_t len);
 char	*str_dup(char *s1);
 
-# endif
+#endif
